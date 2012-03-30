@@ -3,7 +3,7 @@
 use strict;
 BEGIN { $^W = 1 }
 
-use Test::More 'tests' => 4;
+use Test::More 'tests' => 5;
 use_ok 'Archive::Zip::Parser';
 
 my $parser;
@@ -25,3 +25,8 @@ eval {
     $parser = Archive::Zip::Parser->new('test_files/foo.zip');
 };
 is !$@, 1, 'new: opens existing file';
+
+eval {
+    $parser = Archive::Zip::Parser->new('test_files/not_a_zip');
+};
+like $@, qr/not a zip file/, 'new: not a zip file';
