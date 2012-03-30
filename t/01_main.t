@@ -3,7 +3,29 @@
 use strict;
 BEGIN { $^W = 1 }
 
-use Test::More 'tests' => 1;
+use Test::More 'tests' => 4;
 use_ok 'Archive::Zip::Parser';
 
-my $parser = Archive::Zip::Parser->new;
+my $parser;
+
+# new method requires a mandatory parametre
+eval {
+    $parser = Archive::Zip::Parser->new;
+};
+if ($@) {
+    like $@, qr/requires a file name/, 'new: requires a file name';
+}
+
+# new method requires valid file name
+eval {
+    $parser = Archive::Zip::Parser->new('test_files/foobar.zip');
+};
+if ($@) {
+    like $@, qr/Error opening file/, 'new: error opening file';
+}
+
+# open existing file
+eval {
+    $parser = Archive::Zip::Parser->new('test_files/foo.zip');
+};
+is !$@, 1, 'new: opens existing file';
