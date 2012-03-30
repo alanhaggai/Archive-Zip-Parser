@@ -31,5 +31,4 @@ sub new {
     return bless { 'fh' => $fh }, shift;
 }
 
-
 1;
