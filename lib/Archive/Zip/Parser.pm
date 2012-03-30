@@ -6,6 +6,8 @@ BEGIN { $^W = 1 }
 use constant CHUNK_SIZE => 10_240;
 use Fcntl qw( SEEK_SET SEEK_END SEEK_CUR );
 
+use Archive::Zip::Parser::EndOfCentralDirectoryRecord;
+
 sub new {
     my ( $self, $file ) = @_;
 
@@ -79,34 +81,21 @@ sub _parse_end_of_central_directory_record {
     sysseek $fh, -$position, SEEK_END;
     sysread $fh, $chunk, $position;
 
-    my (
-        $number_of_this_disk,
-        $number_of_the_disk_with_the_start_of_the_central_directory,
-        $total_number_of_entries_in_the_central_directory_on_this_disk,
-        $total_number_of_entries_in_the_central_directory,
-        $size_of_the_central_directory,
-        $offset_of_start_of_central_directory_with_respect_to_the_starting_disk_number,
-        $zip_file_comment_length,
-        $zip_file_comment,
-    ) = unpack 'ssssllsa*', $chunk;
-
     # reset to original filehandle position
     sysseek $fh, $orig_fh_position, SEEK_SET;
 
-    $self->{'end_of_central_directory_record'} = {
-        'number_of_this_disk' => $number_of_this_disk,
-        'number_of_the_disk_with_the_start_of_the_central_directory' =>
-          $number_of_the_disk_with_the_start_of_the_central_directory,
-        'total_number_of_entries_in_the_central_directory_on_this_disk' =>
-          $total_number_of_entries_in_the_central_directory_on_this_disk,
-        'total_number_of_entries_in_the_central_directory' =>
-          $total_number_of_entries_in_the_central_directory,
-        'size_of_the_central_directory' => $size_of_the_central_directory,
-        'offset_of_start_of_central_directory_with_respect_to_the_starting_disk_number'
-          => $offset_of_start_of_central_directory_with_respect_to_the_starting_disk_number,
-        'zip_file_comment_length' => $zip_file_comment_length,
-        'zip_file_comment'        => $zip_file_comment,
-    };
+    my $end_of_central_directory_record =
+      Archive::Zip::Parser::EndOfCentralDirectoryRecord->new(
+        unpack 'ssssllsa*', $chunk );
+
+    $self->{'end_of_central_directory_record'} = $end_of_central_directory_record;
+
+    return;
+}
+
+sub end_of_central_directory_record {
+    my $self = shift;
+    return $self->{'end_of_central_directory_record'};
 }
 
 1;
