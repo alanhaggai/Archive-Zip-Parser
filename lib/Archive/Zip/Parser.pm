@@ -20,10 +20,11 @@ sub new {
     # Skip until it is found.
 
     my $chunk;
-    read $fh, $chunk, CHUNK_SIZE;
-
     my $signature = q{\x50\x4B\x03\x04};
-    while ( defined $fh && $chunk !~ /$signature/g ) {
+    while (defined $fh
+        && read( $fh, $chunk, CHUNK_SIZE )
+        && $chunk !~ /$signature/g )
+    {
         die "$file is not a zip file";
     }
 
