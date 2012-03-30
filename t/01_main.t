@@ -20,13 +20,14 @@ eval {
 };
 like $@, qr/Error opening file/, 'new: error opening file';
 
+eval {
+    $parser = Archive::Zip::Parser->new('test_files/not_a_zip');
+};
+like $@, qr/not a zip file/, 'new: not a zip file';
+
 # open existing file
 eval {
     $parser = Archive::Zip::Parser->new('test_files/foo.zip');
 };
 is !$@, 1, 'new: opens existing file';
 
-eval {
-    $parser = Archive::Zip::Parser->new('test_files/not_a_zip');
-};
-like $@, qr/not a zip file/, 'new: not a zip file';
