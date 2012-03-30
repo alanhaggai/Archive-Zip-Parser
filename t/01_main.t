@@ -12,17 +12,13 @@ my $parser;
 eval {
     $parser = Archive::Zip::Parser->new;
 };
-if ($@) {
-    like $@, qr/requires a file name/, 'new: requires a file name';
-}
+like $@, qr/requires a file name/, 'new: requires a file name';
 
 # new method requires valid file name
 eval {
     $parser = Archive::Zip::Parser->new('test_files/foobar.zip');
 };
-if ($@) {
-    like $@, qr/Error opening file/, 'new: error opening file';
-}
+like $@, qr/Error opening file/, 'new: error opening file';
 
 # open existing file
 eval {
