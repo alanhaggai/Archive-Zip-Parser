@@ -1,6 +1,6 @@
 package Archive::Zip::Parser;
 
 use strict;
-use warnings;
+BEGIN { $^W = 1 }
 
 1;
