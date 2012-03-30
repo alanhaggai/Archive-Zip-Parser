@@ -22,14 +22,14 @@ sub new {
     my $chunk;
     my $signature = q{\x50\x4B\x03\x04};
     while (defined $fh
-        && read( $fh, $chunk, CHUNK_SIZE )
+        && sysread( $fh, $chunk, CHUNK_SIZE )
         && $chunk !~ /$signature/g )
     {
         die "$file is not a zip file";
     }
 
     # now the file handle points just after the signature
-    seek $fh, pos $chunk, SEEK_SET;
+    sysseek $fh, pos $chunk, SEEK_SET;
 
     return bless { 'fh' => $fh }, shift;
 }
