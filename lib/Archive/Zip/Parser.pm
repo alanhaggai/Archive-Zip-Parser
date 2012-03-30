@@ -53,12 +53,17 @@ sub _size {
     return $self->{'size'};
 }
 
+sub _tell {
+    my $self = shift;
+    return sysseek $self->_fh, 0, SEEK_CUR;
+}
+
 sub _parse_end_of_central_directory_record {
     my $self             = shift;
     my $fh               = $self->_fh;
     my $size             = $self->_size;
     my $chunk_size       = CHUNK_SIZE;
-    my $orig_fh_position = sysseek $fh, 0, SEEK_CUR;
+    my $orig_fh_position = $self->_tell;
 
     # search from the end of the file handle to check for the 0x504B0506
     # signature
