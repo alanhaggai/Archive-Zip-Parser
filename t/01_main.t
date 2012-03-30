@@ -30,4 +30,3 @@ eval {
     $parser = Archive::Zip::Parser->new('test_files/foo.zip');
 };
 is !$@, 1, 'new: opens existing file';
-
