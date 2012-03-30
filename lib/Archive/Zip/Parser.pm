@@ -4,6 +4,7 @@ use strict;
 BEGIN { $^W = 1 }
 
 use constant CHUNK_SIZE => 10_240;
+use Fcntl qw( SEEK_SET );
 
 sub new {
     my ( $self, $file ) = @_;
@@ -22,11 +23,12 @@ sub new {
     read $fh, $chunk, CHUNK_SIZE;
 
     my $signature = q{\x50\x4B\x03\x04};
-    while ( defined $fh && $chunk !~ /$signature/ ) {
+    while ( defined $fh && $chunk !~ /$signature/g ) {
         die "$file is not a zip file";
     }
 
     # now the file handle points just after the signature
+    seek $fh, pos $chunk, SEEK_SET;
 
     return bless { 'fh' => $fh }, shift;
 }
