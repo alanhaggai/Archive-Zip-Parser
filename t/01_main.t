@@ -3,7 +3,7 @@
 use strict;
 BEGIN { $^W = 1 }
 
-use Test::More 'tests' => 29;
+use Test::More 'tests' => 28;
 use Archive::Zip::Parser;
 
 my $parser;
@@ -19,9 +19,7 @@ like $@, qr/Error opening file/, 'new: error opening file';
 eval { $parser = Archive::Zip::Parser->new('test_files/not_a_zip'); };
 like $@, qr/not a zip file/, 'new: not a zip file';
 
-# open existing file
-eval { $parser = Archive::Zip::Parser->new('test_files/foo.zip'); };
-is !$@, 1, 'new: opens existing file';
+$parser = Archive::Zip::Parser->new('test_files/foo.zip');
 
 my $end_of_central_directory_record = $parser->end_of_central_directory_record;
 is $end_of_central_directory_record->number_of_this_disk, 0,
