@@ -3,8 +3,8 @@
 use strict;
 BEGIN { $^W = 1 }
 
-use Test::More 'tests' => 13;
-use_ok 'Archive::Zip::Parser';
+use Test::More 'tests' => 29;
+use Archive::Zip::Parser;
 
 my $parser;
 
@@ -45,3 +45,40 @@ is $end_of_central_directory_record->zip_file_comment_length, 14,
   'zip file comment length';
 is $end_of_central_directory_record->zip_file_comment, 'Just a comment',
   'zip file comment';
+
+my @central_directory_records = $parser->central_directory_records;
+is $central_directory_records[0]->signature, CENTRAL_DIRECTORY_RECORD_SIGNATURE,
+  'signature';
+
+my $version_made_by = $central_directory_records[0]->version_made_by;
+is $version_made_by->{'specification_version'}, '3.0', 'specification version';
+is $version_made_by->{'attribute_information'}, CENTRAL_DIRECTORY_RECORD_UNIX,
+  'attribute information';
+
+my $version_needed_to_extract =
+  $central_directory_records[0]->version_needed_to_extract;
+is $version_needed_to_extract->{'minimum_feature_version'}, '1.0',
+  'minimum feature version value';
+is $version_needed_to_extract->{'attribute_information'},
+  CENTRAL_DIRECTORY_RECORD_MS_DOS_OS2,
+  'attribute information description';
+
+my $general_purpose_bit_flag =
+  $central_directory_records[0]->general_purpose_bit_flag;
+is $central_directory_records[0]->compression_method,
+  CENTRAL_DIRECTORY_RECORD_FILE_IS_STORED, 'compression method';
+my $last_mod_file_date = $central_directory_records[0]->last_mod_file_date;
+is $last_mod_file_date->{'year'},  2012, 'year';
+is $last_mod_file_date->{'month'}, 3,    'month';
+is $last_mod_file_date->{'day'},   31,   'day';
+
+my $last_mod_file_time = $central_directory_records[0]->last_mod_file_time;
+is $last_mod_file_time->{'hour'},   16, 'hour';
+is $last_mod_file_time->{'minute'}, 27, 'minute';
+is $last_mod_file_time->{'second'}, 5,  'second';
+
+is $central_directory_records[0]->crc_32, '4DF208A7', 'CRC-32';
+is $central_directory_records[0]->compressed_size, 18, 'uncompressed size';
+is $central_directory_records[0]->uncompressed_size, 18, 'uncompressed size';
+is $central_directory_records[0]->file_name_length, 3, 'file name length';
+is $central_directory_records[0]->extra_field_length, 24, 'extra field length';
