@@ -3,7 +3,7 @@
 use strict;
 BEGIN { $^W = 1 }
 
-use Test::More 'tests' => 29;
+use Test::More 'tests' => 31;
 use Archive::Zip::Parser;
 
 my $parser;
@@ -33,7 +33,7 @@ is $end_of_central_directory_record
 is $end_of_central_directory_record
   ->total_number_of_entries_in_the_central_directory, 1,
   'total number of entries in the central directory';
-is $end_of_central_directory_record->size_of_the_central_directory, 73,
+is $end_of_central_directory_record->size_of_the_central_directory, 93,
   'size of the central directory';
 is $end_of_central_directory_record
   ->offset_of_start_of_central_directory_with_respect_to_the_starting_disk_number,
@@ -80,4 +80,9 @@ is $central_directory_records[0]->compressed_size,    18, 'uncompressed size';
 is $central_directory_records[0]->uncompressed_size,  18, 'uncompressed size';
 is $central_directory_records[0]->file_name_length,   3,  'file name length';
 is $central_directory_records[0]->extra_field_length, 24, 'extra field length';
-is $central_directory_records[0]->file_comment_length, 0, 'file comment length';
+is $central_directory_records[0]->file_comment_length, 20,
+  'file comment length';
+
+is $central_directory_records[0]->file_name, 'foo', 'file name';
+is $central_directory_records[0]->file_comment, 'Comment for file foo',
+  'file comment';

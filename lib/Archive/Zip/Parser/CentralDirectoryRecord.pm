@@ -178,6 +178,16 @@ sub attribute_information {
     return $self->{'attribute_information'};
 }
 
+sub file_name {
+    my $self = shift;
+    return $self->{'file_name'};
+}
+
+sub file_comment {
+    my $self = shift;
+    return $self->{'file_comment'};
+}
+
 package Archive::Zip::Parser::CentralDirectoryRecord::GeneralPurposeBitFlag;
 
 use strict;
