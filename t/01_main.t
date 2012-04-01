@@ -3,7 +3,7 @@
 use strict;
 BEGIN { $^W = 1 }
 
-use Test::More 'tests' => 28;
+use Test::More 'tests' => 29;
 use Archive::Zip::Parser;
 
 my $parser;
@@ -76,7 +76,8 @@ is $last_mod_file_time->{'minute'}, 27, 'minute';
 is $last_mod_file_time->{'second'}, 5,  'second';
 
 is $central_directory_records[0]->crc_32, '4DF208A7', 'CRC-32';
-is $central_directory_records[0]->compressed_size, 18, 'uncompressed size';
-is $central_directory_records[0]->uncompressed_size, 18, 'uncompressed size';
-is $central_directory_records[0]->file_name_length, 3, 'file name length';
+is $central_directory_records[0]->compressed_size,    18, 'uncompressed size';
+is $central_directory_records[0]->uncompressed_size,  18, 'uncompressed size';
+is $central_directory_records[0]->file_name_length,   3,  'file name length';
 is $central_directory_records[0]->extra_field_length, 24, 'extra field length';
+is $central_directory_records[0]->file_comment_length, 0, 'file comment length';
