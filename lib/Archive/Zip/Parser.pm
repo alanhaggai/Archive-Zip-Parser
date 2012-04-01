@@ -268,7 +268,6 @@ sub _parse_central_directory_records {
     my $fh   = $self->_fh;
     my $end_of_central_directory_record =
       $self->end_of_central_directory_record;
-    my $size = $end_of_central_directory_record->size_of_the_central_directory;
 
     for ( 1 .. $end_of_central_directory_record
         ->total_number_of_entries_in_the_central_directory_on_this_disk )
