@@ -298,14 +298,8 @@ sub _next_central_directory_record {
     sysread $fh, my ($chunk), CENTRAL_DIRECTORY_RECORD_SIZE;
 
     my $central_directory_record =
-      Archive::Zip::Parser::CentralDirectoryRecord->new(
+      Archive::Zip::Parser::CentralDirectoryRecord->new( $fh,
         unpack 'H8C2C2B16SSSH8LLSSSSSLL', $chunk );
-
-    # Place the filehandle pointer at first of the next Central Directory Record
-    sysseek $fh,
-      $central_directory_record->file_name_length +
-      $central_directory_record->extra_field_length +
-      $central_directory_record->file_comment_length, SEEK_CUR;
 
     return $central_directory_record;
 }

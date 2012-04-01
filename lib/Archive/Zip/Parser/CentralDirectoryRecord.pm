@@ -4,8 +4,9 @@ use strict;
 BEGIN { $^W = 1 }
 
 sub new {
-    my ( $self, @structs ) = @_;
-    return bless {
+    my ( $self, $fh, @structs ) = @_;
+
+    my $object =  bless {
         'signature'                       => $structs[0],
         'version_made_by'                 => [ $structs[1], $structs[2] ],
         'version_needed_to_extract'       => [ $structs[3], $structs[4] ],
@@ -24,6 +25,16 @@ sub new {
         'external_file_attributes'        => $structs[17],
         'relative_offset_of_local_header' => $structs[18],
     }, $self;
+
+    sysread $fh, my ($file_name),    $object->{'file_name_length'};
+    sysread $fh, my ($extra_field),  $object->{'extra_field_length'};
+    sysread $fh, my ($file_comment), $object->{'file_comment_length'};
+
+    $object->{'file_name'}    = $file_name;
+    $object->{'extra_field'}  = $extra_field;
+    $object->{'file_comment'} = $file_comment;
+
+    return $object;
 }
 
 sub signature {
