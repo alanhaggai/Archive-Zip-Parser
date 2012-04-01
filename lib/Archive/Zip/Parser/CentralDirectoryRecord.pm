@@ -167,12 +167,6 @@ sub attribute_information {
     return $self->{'attribute_information'};
 }
 
-sub _length {
-    my $self = shift;
-    return $self->file_name_length + $self->extra_field_length +
-      $self->file_comment_length;
-}
-
 package Archive::Zip::Parser::CentralDirectoryRecord::GeneralPurposeBitFlag;
 
 use strict;
